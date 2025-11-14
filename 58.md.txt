@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+bool ok(int v, vector<vector<int>>& g, vector<int>& c, int col) {
+    for (int i = 0; i < g.size(); i++)
+        if (g[v][i] && c[i] == col) return false;
+    return true;
+}
+
+bool solve(int v, vector<vector<int>>& g, vector<int>& c, int m) {
+    if (v == g.size()) return true;
+    for (int col = 1; col <= m; col++) {
+        if (ok(v, g, c, col)) {
+            c[v] = col;
+            if (solve(v + 1, g, c, m)) return true;
+            c[v] = 0;
+        }
+    }
+    return false;
+}
+
+int main() {
+    int n, m;
+    cin >> n >> m;
+
+    vector<vector<int>> g(n, vector<int>(n));
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            cin >> g[i][j];
+
+    vector<int> c(n);
+
+    if (solve(0, g, c, m))
+        for (int x : c) cout << x << " ";
+    else
+        cout << -1;
+}
